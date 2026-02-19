@@ -602,7 +602,7 @@ Framework.Commands = {}
 ---@param ... any
 Framework.Commands.Add = function(name, help, arguments, argsrequired, callback, permission, ...)
     ESX.RegisterCommand(name, permission, function(xPlayer, args, showError)
-        callback(xPlayer, args)
+        callback(xPlayer.source, args)
     end, false, {
         help = help,
         arguments = arguments
