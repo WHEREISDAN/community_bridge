@@ -528,4 +528,18 @@ AddEventHandler("playerDropped", function()
     TriggerEvent("community_bridge:Server:OnPlayerUnload", src)
 end)
 
+local QBCore = exports['qb-core']:GetCoreObject()
+
+Framework.Commands = {}
+---@param name string
+---@param help string
+---@param arguments table
+---@param argsrequired boolean
+---@param callback function
+---@param permission string
+---@param ... any
+Framework.Commands.Add = function(name, help, arguments, argsrequired, callback, permission, ...)
+    QBCore.Commands.Add(name, help, arguments, argsrequired, callback, permission, ...)
+end
+
 return Framework
