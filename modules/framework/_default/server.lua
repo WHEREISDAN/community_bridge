@@ -116,4 +116,14 @@ AddEventHandler('community_bridge:Server:OnPlayerUnload', function(src)
     Framework.RemoveJobCount(src)
 end)
 
+-- ============================================================================
+-- Death State Stubs (overridden by framework modules that support death)
+-- ============================================================================
+
+Framework.GetIsPlayerDowned = Framework.GetIsPlayerDowned or function(src) return false end
+Framework.GetDeathState = Framework.GetDeathState or function(src) return nil end
+Framework.KillPlayer = Framework.KillPlayer or function(src, cause) return false end
+Framework.DownPlayer = Framework.DownPlayer or function(src, cause) return false end
+Framework.RespawnPlayer = Framework.RespawnPlayer or function(src, coords) return false end
+
 return Framework

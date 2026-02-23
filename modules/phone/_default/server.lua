@@ -28,4 +28,13 @@ Phone.SendEmail = function(src, email, title, message)
     return false, print('^6 There is no phone bridged in community_bridge. ^0')
 end
 
+---This will send a service message (SMS) to a phone number.
+---@param serviceName string
+---@param phoneNumber string
+---@param content string
+---@return boolean
+Phone.SendServiceMessage = function(serviceName, phoneNumber, content)
+    return false
+end
+
 return Phone

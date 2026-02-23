@@ -34,6 +34,24 @@ RegisterNetEvent('community_bridge:Client:Notify', function(title, message, _typ
     Notify.SendNotification(title, message, _type, time, props)
 end)
 
+-- ============================================================================
+-- Confirmation Prompt Handler (fallback using ox_lib alertDialog)
+-- ============================================================================
+
+RegisterNetEvent('community_bridge:Client:Confirm', function(confirmId, options)
+    local result = lib.alertDialog({
+        header = options.title or 'Confirm',
+        content = options.message or '',
+        centered = true,
+        cancel = true,
+        labels = {
+            confirm = options.acceptLabel or 'Accept',
+            cancel = options.declineLabel or 'Decline',
+        },
+    })
+    TriggerServerEvent('community_bridge:Server:ConfirmResponse', confirmId, result == 'confirm')
+end)
+
 ---------[[Depricated Stuff Below, please adjust to the HelpText module instead]]--------
 ---Depricated: This will hide the help text message on the screen
 ---@return nil

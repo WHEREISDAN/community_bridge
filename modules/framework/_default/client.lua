@@ -37,4 +37,11 @@ Framework.GetJobCountTotal = function(tbl)
     return total
 end
 
+-- ============================================================================
+-- Death State Stubs (overridden by framework modules that support death)
+-- ============================================================================
+
+Framework.GetIsPlayerDowned = Framework.GetIsPlayerDowned or function() return false end
+Framework.GetDeathState = Framework.GetDeathState or function() return nil end
+
 return Framework
