@@ -125,5 +125,6 @@ Framework.GetDeathState = Framework.GetDeathState or function(src) return nil en
 Framework.KillPlayer = Framework.KillPlayer or function(src, cause) return false end
 Framework.DownPlayer = Framework.DownPlayer or function(src, cause) return false end
 Framework.RespawnPlayer = Framework.RespawnPlayer or function(src, coords) return false end
+Framework.Logout = Framework.Logout or function(src) return false end
 
 return Framework
