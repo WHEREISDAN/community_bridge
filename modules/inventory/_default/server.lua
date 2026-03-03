@@ -129,6 +129,22 @@ Inventory.RegisterStash = function(id, label, slots, weight, owner, groups, coor
     return true, id
 end
 
+---@description This will get all items in a stash
+---@param id string
+---@return table
+Inventory.GetStashItems = function(id)
+    return {}, print("This Inventory Has Not Been Bridged For A GetStashItems Feature.")
+end
+
+---@description This will remove an item from a stash
+---@param id string
+---@param item string
+---@param count number
+---@return boolean
+Inventory.RemoveStashItem = function(id, item, count)
+    return false, print("This Inventory Has Not Been Bridged For A RemoveStashItem Feature.")
+end
+
 ---@description This will return a boolean if the player has the item.
 ---@param src number
 ---@param item string
