@@ -29,26 +29,16 @@ end
 
 ---This will send an email via oxide-phone.
 ---@param src number
----@param email string
+---@param email string The sender/service name
 ---@param title string
 ---@param message string
 ---@return boolean
 Phone.SendEmail = function(src, email, title, message)
-    local ok, result = pcall(exports['oxide-phone'].SendServiceEmail, exports['oxide-phone'],
-        'Community Bridge', 'noreply@bridge.com', email, title, message)
-    if ok then return result ~= nil end
-    return false
-end
-
----This will send a service message (SMS) to a phone number.
----@param serviceName string
----@param phoneNumber string
----@param content string
----@return boolean
-Phone.SendServiceMessage = function(serviceName, phoneNumber, content)
-    local ok, result = pcall(exports['oxide-phone'].SendServiceMessage, exports['oxide-phone'],
-        serviceName, phoneNumber, content)
-    if ok then return result ~= nil end
+    local ok, playerEmail = pcall(exports['oxide-phone'].GetEmailAddress, exports['oxide-phone'], src)
+    if not ok or not playerEmail then return false end
+    local ok2, result = pcall(exports['oxide-phone'].SendServiceEmail, exports['oxide-phone'],
+        email, email .. '@service.com', playerEmail, title, message)
+    if ok2 then return result ~= nil end
     return false
 end
 

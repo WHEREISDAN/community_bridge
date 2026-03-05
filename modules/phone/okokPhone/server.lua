@@ -38,18 +38,18 @@ end
 
 ---This will send an email to the passed source, email address, title and message.
 ---@param src number
----@param email string
+---@param email string The sender/service name
 ---@param title string
 ---@param message string
 ---@return boolean
 Phone.SendEmail = function(src, email, title, message)
-    local senderAddress = exports.okokPhone:getEmailAddressFromSource(src) --[[ @as string? ]]
-    if not senderAddress then return false end
+    local playerEmail = exports.okokPhone:getEmailAddressFromSource(src) --[[ @as string? ]]
+    if not playerEmail then return false end
 
     ---@type NewEmail
     local data = {
-        sender = senderAddress,
-        recipients = { email },
+        sender = email,
+        recipients = { playerEmail },
         subject = title,
         body = message,
     }
