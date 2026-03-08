@@ -609,4 +609,14 @@ Framework.Commands.Add = function(name, help, arguments, argsrequired, callback,
     })
 end
 
+Framework.DoesPlayerHaveJob = function(src, jobName)
+    local jobData = Framework.GetPlayerJobData(src)
+    if not jobData then return false end
+    return jobData.jobName == jobName
+end
+
+Framework.DoesPlayerHaveGang = function(src, gangName)
+    return false
+end
+
 return Framework

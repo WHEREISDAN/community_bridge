@@ -248,4 +248,14 @@ RegisterNetEvent('esx:setJob', function(data)
     TriggerEvent('community_bridge:Client:OnPlayerJobUpdate', data.name, data.label, data.grade_label, data.grade)
 end)
 
+Framework.DoesPlayerHaveJob = function(jobName)
+    local jobData = Framework.GetPlayerJobData()
+    if not jobData then return false end
+    return jobData.jobName == jobName
+end
+
+Framework.DoesPlayerHaveGang = function(gangName)
+    return false
+end
+
 return Framework

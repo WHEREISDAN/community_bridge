@@ -705,4 +705,14 @@ Framework.Commands.Add = function(name, help, arguments, argsrequired, callback,
     QBCore.Commands.Add(name, help, arguments, argsrequired, callback, permission, ...)
 end
 
+Framework.DoesPlayerHaveJob = function(src, jobName)
+    local jobData = Framework.GetPlayerJobData(src)
+    if not jobData then return false end
+    return jobData.jobName == jobName
+end
+
+Framework.DoesPlayerHaveGang = function(src, gangName)
+    return Framework.GetPlayerGang(src) == gangName
+end
+
 return Framework

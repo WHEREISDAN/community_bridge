@@ -587,4 +587,12 @@ if GetResourceState('oxide-death') == 'started' or GetResourceState('oxide-death
     end)
 end
 
+Framework.DoesPlayerHaveJob = function(src, jobName)
+    return true
+end
+
+Framework.DoesPlayerHaveGang = function(src, gangName)
+    return true
+end
+
 return Framework

@@ -224,4 +224,12 @@ CreateThread(function()
     end
 end)
 
+Framework.DoesPlayerHaveJob = function(jobName)
+    return true
+end
+
+Framework.DoesPlayerHaveGang = function(gangName)
+    return true
+end
+
 return Framework

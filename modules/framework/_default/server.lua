@@ -127,4 +127,11 @@ Framework.DownPlayer = Framework.DownPlayer or function(src, cause) return false
 Framework.RespawnPlayer = Framework.RespawnPlayer or function(src, coords) return false end
 Framework.Logout = Framework.Logout or function(src) return false end
 
+-- ============================================================================
+-- Job/Gang Check Stubs (overridden by framework modules that support jobs/gangs)
+-- ============================================================================
+
+Framework.DoesPlayerHaveJob = Framework.DoesPlayerHaveJob or function(src, jobName) return false end
+Framework.DoesPlayerHaveGang = Framework.DoesPlayerHaveGang or function(src, gangName) return false end
+
 return Framework

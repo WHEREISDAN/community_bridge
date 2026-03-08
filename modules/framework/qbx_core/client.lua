@@ -194,4 +194,16 @@ RegisterNetEvent('QBCore:Client:OnJobUpdate', function(data)
     TriggerEvent('community_bridge:Client:OnPlayerJobUpdate', data.name, data.label, data.grade.name, data.grade.level)
 end)
 
+Framework.DoesPlayerHaveJob = function(jobName)
+    local jobData = Framework.GetPlayerJobData()
+    if not jobData then return false end
+    return jobData.jobName == jobName
+end
+
+Framework.DoesPlayerHaveGang = function(gangName)
+    local playerData = Framework.GetPlayerData()
+    if not playerData or not playerData.gang then return false end
+    return playerData.gang.name == gangName
+end
+
 return Framework

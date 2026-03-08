@@ -44,4 +44,11 @@ end
 Framework.GetIsPlayerDowned = Framework.GetIsPlayerDowned or function() return false end
 Framework.GetDeathState = Framework.GetDeathState or function() return nil end
 
+-- ============================================================================
+-- Job/Gang Check Stubs (overridden by framework modules that support jobs/gangs)
+-- ============================================================================
+
+Framework.DoesPlayerHaveJob = Framework.DoesPlayerHaveJob or function(jobName) return false end
+Framework.DoesPlayerHaveGang = Framework.DoesPlayerHaveGang or function(gangName) return false end
+
 return Framework
