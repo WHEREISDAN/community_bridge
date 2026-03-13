@@ -117,6 +117,25 @@ AddEventHandler('community_bridge:Server:OnPlayerUnload', function(src)
 end)
 
 -- ============================================================================
+-- Identifier Fallback (uses FiveM license when no framework is present)
+-- ============================================================================
+
+Framework.GetPlayerIdentifier = Framework.GetPlayerIdentifier or function(src)
+    if not src then return nil end
+    local license = GetPlayerIdentifierByType(src, 'license2') or GetPlayerIdentifierByType(src, 'license')
+    if not license then return nil end
+    return license
+end
+
+-- ============================================================================
+-- Usable Item Stub (no-op when no framework/inventory supports it)
+-- ============================================================================
+
+Framework.RegisterUsableItem = Framework.RegisterUsableItem or function(itemName, cb)
+    print(('[Community Bridge] Warning: RegisterUsableItem called for "%s" but no framework supports it — skipping'):format(tostring(itemName)))
+end
+
+-- ============================================================================
 -- Death State Stubs (overridden by framework modules that support death)
 -- ============================================================================
 

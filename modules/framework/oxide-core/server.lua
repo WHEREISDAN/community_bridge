@@ -500,7 +500,8 @@ Framework.RegisterUsableItem = function(itemName, cb)
         local itemData = {
             name = itemName,
             metadata = metadata or {},
-            slot = 0,
+            slot = item and item.slot or 0,
+            containerId = item and item.containerId or nil,
         }
         cb(source, itemData)
     end

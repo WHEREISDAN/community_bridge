@@ -55,7 +55,27 @@ Inventory.RemoveItem = function(src, item, count, slot, metadata)
     item = type(item) == "table" and item.name or item
     local charId = GetCharId(src)
     if not charId then return false end
-    local success, err = GetInv().RemoveItem(charId, item, count)
+    local success, err
+    if slot and slot > 0 then
+        local inv = GetInv()
+        -- Find the containerId for this slot
+        local items = inv.GetAllItems(charId)
+        local containerId
+        for _, v in ipairs(items or {}) do
+            if v.slot == slot and v.name == item then
+                containerId = v.containerId
+                break
+            end
+        end
+        if containerId then
+            local removed = inv.RemoveFromSlot(charId, containerId, slot, count)
+            success = removed ~= nil
+        else
+            success, err = inv.RemoveItem(charId, item, count)
+        end
+    else
+        success, err = GetInv().RemoveItem(charId, item, count)
+    end
     if not success then return false end
     TriggerClientEvent("community_bridge:client:inventory:updateInventory", src, {action = "remove", item = item, count = count, slot = slot, metadata = metadata})
     return true
@@ -237,10 +257,9 @@ end
 ---@param count number
 ---@return boolean
 Inventory.CanCarryItem = function(src, item, count)
-    -- Check if pockets can hold the item
     local charId = GetCharId(src)
     if not charId then return false end
-    return GetInv().HasItem(charId, item, 0) or true
+    return GetInv().CanAddItem(charId, item, count or 1)
 end
 
 ---@description This will update the plate to the vehicle inside the inventory.
