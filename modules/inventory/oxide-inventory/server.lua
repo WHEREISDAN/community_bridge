@@ -158,10 +158,21 @@ end
 Inventory.SetMetadata = function(src, item, slot, metadata)
     local charId = GetCharId(src)
     if not charId then return end
-    if type(metadata) == 'table' then
-        for key, value in pairs(metadata) do
-            GetInv().SetItemMetadata(charId, nil, slot, key, value)
+    if type(metadata) ~= 'table' then return end
+
+    -- Find the containerId for this item at the given slot
+    local items = GetInv().GetAllItems(charId)
+    local containerId
+    for _, v in ipairs(items or {}) do
+        if v.slot == slot and v.name == item then
+            containerId = v.containerId
+            break
         end
+    end
+    if not containerId then return end
+
+    for key, value in pairs(metadata) do
+        GetInv().SetItemMetadata(charId, containerId, slot, key, value)
     end
 end
 
