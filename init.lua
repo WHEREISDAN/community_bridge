@@ -67,6 +67,7 @@ end)
 if not IsDuplicityVersion() then goto client end
 Bridge.RegisterModule('Version', Version)
 Bridge.RegisterModule('Banking', Banking)
+Bridge.RegisterModule('VehicleOwnership', VehicleOwnership)
 
 if IsDuplicityVersion() then return end
 ::client::
