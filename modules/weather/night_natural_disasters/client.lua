@@ -13,10 +13,28 @@ Weather.GetResourceName = function()
     return "night_natural_disasters"
 end
 
+local weatherNames = {
+    [`EXTRASUNNY`] = 'EXTRASUNNY',
+    [`CLEAR`] = 'CLEAR',
+    [`NEUTRAL`] = 'NEUTRAL',
+    [`SMOG`] = 'SMOG',
+    [`FOGGY`] = 'FOGGY',
+    [`OVERCAST`] = 'OVERCAST',
+    [`CLOUDS`] = 'CLOUDS',
+    [`CLEARING`] = 'CLEARING',
+    [`RAIN`] = 'RAIN',
+    [`THUNDER`] = 'THUNDER',
+    [`SNOW`] = 'SNOW',
+    [`BLIZZARD`] = 'BLIZZARD',
+    [`SNOWLIGHT`] = 'SNOWLIGHT',
+    [`XMAS`] = 'XMAS',
+    [`HALLOWEEN`] = 'HALLOWEEN',
+}
+
 ---Get the current weather type as a string
 ---@return string
 Weather.GetWeather = function()
-    return exports['night_natural_disasters']:GetCurrentWeather() or 'CLEAR'
+    return weatherNames[GetPrevWeatherType()] or 'CLEAR'
 end
 
 ---Get the current in-game time
