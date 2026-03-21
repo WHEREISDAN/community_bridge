@@ -49,4 +49,42 @@ function Clothing.RestoreAppearance(src)
     TriggerClientEvent('community_bridge:client:RestoreAppearance', src)
 end
 
+---Save a named outfit for a player
+---@param src number
+---@param name string
+---@param data table { components, props } in default format
+---@return number|nil outfitId
+function Clothing.SaveOutfit(src, name, data)
+    print("[community_bridge] Clothing.SaveOutfit: No compatible clothing resource detected.")
+    return nil
+end
+
+---Get all saved outfits for a player
+---@param src number
+---@return table[]
+function Clothing.GetOutfits(src)
+    print("[community_bridge] Clothing.GetOutfits: No compatible clothing resource detected.")
+    return {}
+end
+
+---Update a saved outfit
+---@param src number
+---@param outfitId number|string
+---@param name string
+---@param data table { components, props } in default format
+---@return boolean
+function Clothing.UpdateOutfit(src, outfitId, name, data)
+    print("[community_bridge] Clothing.UpdateOutfit: No compatible clothing resource detected.")
+    return false
+end
+
+---Delete a saved outfit
+---@param src number
+---@param outfitId number|string
+---@return boolean
+function Clothing.DeleteOutfit(src, outfitId)
+    print("[community_bridge] Clothing.DeleteOutfit: No compatible clothing resource detected.")
+    return false
+end
+
 return Clothing

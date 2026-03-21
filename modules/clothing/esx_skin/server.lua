@@ -146,6 +146,85 @@ function Clothing.OpenMenu(src)
     TriggerClientEvent('esx_skin:openMenu', src)
 end
 
+-- ============================================================================
+-- Outfit Management (uses datastore_data table)
+-- ============================================================================
+
+local function getPlayerDressing(identifier)
+    local row = MySQL.single.await(
+        "SELECT data FROM datastore_data WHERE name = 'property' AND owner = ?",
+        { identifier }
+    )
+    if not row or not row.data then return {} end
+    local data = type(row.data) == 'string' and json.decode(row.data) or row.data
+    return data.dressing or {}
+end
+
+local function savePlayerDressing(identifier, dressing)
+    local row = MySQL.single.await(
+        "SELECT id FROM datastore_data WHERE name = 'property' AND owner = ?",
+        { identifier }
+    )
+    local encoded = json.encode({ dressing = dressing })
+    if row then
+        MySQL.update.await("UPDATE datastore_data SET data = ? WHERE name = 'property' AND owner = ?", { encoded, identifier })
+    else
+        MySQL.insert.await("INSERT INTO datastore_data (name, owner, data) VALUES ('property', ?, ?)", { identifier, encoded })
+    end
+end
+
+function Clothing.SaveOutfit(src, name, data)
+    local identifier = Bridge.Framework.GetPlayerIdentifier(src)
+    if not identifier then return nil end
+    local skin = Clothing.ConvertFromDefault(data)
+    local dressing = getPlayerDressing(identifier)
+    dressing[#dressing + 1] = { label = name, skin = skin }
+    savePlayerDressing(identifier, dressing)
+    return #dressing
+end
+
+function Clothing.GetOutfits(src)
+    local identifier = Bridge.Framework.GetPlayerIdentifier(src)
+    if not identifier then return {} end
+    local dressing = getPlayerDressing(identifier)
+    local outfits = {}
+    for i, outfit in ipairs(dressing) do
+        local converted = Clothing.ConvertToDefault(outfit.skin or {})
+        outfits[#outfits + 1] = {
+            outfitId = i,
+            name = outfit.label,
+            components = converted.components,
+            props = converted.props,
+        }
+    end
+    return outfits
+end
+
+function Clothing.UpdateOutfit(src, outfitId, name, data)
+    local identifier = Bridge.Framework.GetPlayerIdentifier(src)
+    if not identifier then return false end
+    local idx = tonumber(outfitId)
+    if not idx then return false end
+    local dressing = getPlayerDressing(identifier)
+    if not dressing[idx] then return false end
+    dressing[idx].label = name
+    dressing[idx].skin = Clothing.ConvertFromDefault(data)
+    savePlayerDressing(identifier, dressing)
+    return true
+end
+
+function Clothing.DeleteOutfit(src, outfitId)
+    local identifier = Bridge.Framework.GetPlayerIdentifier(src)
+    if not identifier then return false end
+    local idx = tonumber(outfitId)
+    if not idx then return false end
+    local dressing = getPlayerDressing(identifier)
+    if not dressing[idx] then return false end
+    table.remove(dressing, idx)
+    savePlayerDressing(identifier, dressing)
+    return true
+end
+
 ---Callback handler for retrieving a player's appearance data
 Callback.Register('community_bridge:cb:GetAppearance', function(source)
     local src = source

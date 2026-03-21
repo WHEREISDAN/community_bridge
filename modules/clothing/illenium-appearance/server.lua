@@ -126,6 +126,59 @@ function Clothing.OpenMenu(src)
     TriggerClientEvent('qb-clothing:client:openMenu', src)
 end
 
+-- ============================================================================
+-- Outfit Management
+-- ============================================================================
+
+function Clothing.SaveOutfit(src, name, data)
+    local citId = Bridge.Framework.GetPlayerIdentifier(src)
+    if not citId then return nil end
+    local model = GetEntityModel(GetPlayerPed(src))
+    -- illenium stores components and props as separate JSON columns
+    local id = MySQL.insert.await(
+        'INSERT INTO player_outfits (citizenid, outfitname, model, components, props) VALUES (?, ?, ?, ?, ?)',
+        { citId, name, tostring(model), json.encode(data.components or {}), json.encode(data.props or {}) }
+    )
+    return id
+end
+
+function Clothing.GetOutfits(src)
+    local citId = Bridge.Framework.GetPlayerIdentifier(src)
+    if not citId then return {} end
+
+    local rows = MySQL.query.await('SELECT * FROM player_outfits WHERE citizenid = ?', { citId })
+    if not rows then return {} end
+
+    local outfits = {}
+    for _, row in ipairs(rows) do
+        local components = type(row.components) == 'string' and json.decode(row.components) or row.components
+        local props = type(row.props) == 'string' and json.decode(row.props) or row.props
+        outfits[#outfits + 1] = {
+            outfitId = row.id,
+            name = row.outfitname,
+            components = components or {},
+            props = props or {},
+        }
+    end
+    return outfits
+end
+
+function Clothing.UpdateOutfit(src, outfitId, name, data)
+    local affected = MySQL.update.await(
+        'UPDATE player_outfits SET outfitname = ?, components = ?, props = ? WHERE id = ?',
+        { name, json.encode(data.components or {}), json.encode(data.props or {}), tonumber(outfitId) }
+    )
+    return affected and affected > 0
+end
+
+function Clothing.DeleteOutfit(src, outfitId)
+    local affected = MySQL.update.await(
+        'DELETE FROM player_outfits WHERE id = ?',
+        { tonumber(outfitId) }
+    )
+    return affected and affected > 0
+end
+
 --- Event handler for when a player loads into the server
 --- Caches the player's appearance data
 AddEventHandler('community_bridge:Server:OnPlayerLoaded', function(src)

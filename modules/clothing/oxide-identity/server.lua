@@ -157,6 +157,39 @@ function Clothing.IsMale(src)
     return GetEntityModel(ped) == `mp_m_freemode_01`
 end
 
+-- ============================================================================
+-- Outfit Management
+-- ============================================================================
+
+function Clothing.SaveOutfit(src, name, data)
+    local charId = Bridge.Framework.GetPlayerIdentifier(src)
+    if not charId then return nil end
+    local native = Clothing.ConvertFromDefault(data)
+    return exports['oxide-identity']:SaveOutfit(tonumber(charId), name, native.components, native.props)
+end
+
+function Clothing.GetOutfits(src)
+    local charId = Bridge.Framework.GetPlayerIdentifier(src)
+    if not charId then return {} end
+    local outfits = exports['oxide-identity']:GetOutfits(tonumber(charId))
+    if not outfits then return {} end
+    for i, outfit in ipairs(outfits) do
+        local converted = Clothing.ConvertToDefault({ components = outfit.components, props = outfit.props })
+        outfits[i].components = converted.components
+        outfits[i].props = converted.props
+    end
+    return outfits
+end
+
+function Clothing.UpdateOutfit(src, outfitId, name, data)
+    local native = Clothing.ConvertFromDefault(data)
+    return exports['oxide-identity']:UpdateOutfit(tonumber(outfitId), name, native.components, native.props)
+end
+
+function Clothing.DeleteOutfit(src, outfitId)
+    return exports['oxide-identity']:DeleteOutfit(tonumber(outfitId))
+end
+
 AddEventHandler('community_bridge:Server:OnPlayerLoaded', function(src)
     src = src and tonumber(src)
     assert(src, "src is nil")

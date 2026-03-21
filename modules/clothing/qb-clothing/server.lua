@@ -132,6 +132,64 @@ function Clothing.OpenMenu(src)
     TriggerClientEvent('qb-clothing:client:openMenu', src)
 end
 
+-- ============================================================================
+-- Outfit Management
+-- ============================================================================
+
+function Clothing.SaveOutfit(src, name, data)
+    local Player = QBCore.Functions.GetPlayer(src)
+    if not Player then return nil end
+    local citId = Player.PlayerData.citizenid
+    local model = GetEntityModel(GetPlayerPed(src))
+    local skin = Clothing.ConvertFromDefault(data)
+    local outfitId = 'outfit-' .. math.random(1, 10) .. '-' .. math.random(1111, 9999)
+
+    local id = MySQL.insert.await(
+        'INSERT INTO player_outfits (citizenid, outfitname, model, skin, outfitId) VALUES (?, ?, ?, ?, ?)',
+        { citId, name, tostring(model), json.encode(skin), outfitId }
+    )
+    return id
+end
+
+function Clothing.GetOutfits(src)
+    local Player = QBCore.Functions.GetPlayer(src)
+    if not Player then return {} end
+    local citId = Player.PlayerData.citizenid
+
+    local rows = MySQL.query.await('SELECT * FROM player_outfits WHERE citizenid = ?', { citId })
+    if not rows then return {} end
+
+    local outfits = {}
+    for _, row in ipairs(rows) do
+        local skin = type(row.skin) == 'string' and json.decode(row.skin) or row.skin
+        local converted = Clothing.ConvertToDefault(skin or {})
+        outfits[#outfits + 1] = {
+            outfitId = row.id,
+            name = row.outfitname,
+            components = converted.components,
+            props = converted.props,
+        }
+    end
+    return outfits
+end
+
+function Clothing.UpdateOutfit(src, outfitId, name, data)
+    local skin = Clothing.ConvertFromDefault(data)
+    local affected = MySQL.update.await(
+        'UPDATE player_outfits SET outfitname = ?, skin = ? WHERE id = ?',
+        { name, json.encode(skin), tonumber(outfitId) }
+    )
+    return affected and affected > 0
+end
+
+function Clothing.DeleteOutfit(src, outfitId)
+    local affected = MySQL.update.await(
+        'DELETE FROM player_outfits WHERE id = ?',
+        { tonumber(outfitId) }
+    )
+    return affected and affected > 0
+end
+
 --- Event handler for when a player loads into the server
 --- Caches the player's appearance data
 AddEventHandler('community_bridge:Server:OnPlayerLoaded', function(src)
