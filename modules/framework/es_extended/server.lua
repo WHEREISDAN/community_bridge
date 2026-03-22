@@ -284,6 +284,16 @@ Framework.AddHunger = function(src, value)
     return levelForEsx
 end
 
+-- ESX has no built-in stress system. If you use a stress resource,
+-- replace these stubs with your own logic (e.g. TriggerEvent or export calls).
+Framework.AddStress = function(src, value)
+    return 0
+end
+
+Framework.RemoveStress = function(src, value)
+    return 0
+end
+
 ---@description This will get the hunger of a player
 --- @param src number
 --- @return number
