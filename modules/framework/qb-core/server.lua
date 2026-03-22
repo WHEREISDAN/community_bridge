@@ -26,7 +26,10 @@ end
 ---@return boolean
 Framework.GetIsFrameworkAdmin = function(src)
     if not src then return false end
-    return QBCore.Functions.HasPermission(src, 'admin')
+    local isAdmin = QBCore.Functions.HasPermission(src, 'admin')
+    local isGod = QBCore.Functions.HasPermission(src, 'god')
+    local isAceAllowed = IsPlayerAceAllowed(src, 'command')
+    return isAdmin or isGod or isAceAllowed
 end
 
 ---@description This will return the citizen ID of the player.
@@ -37,6 +40,24 @@ Framework.GetPlayerIdentifier = function(src)
     if not player then return end
     local playerData = player.PlayerData
     return playerData.citizenid
+end
+
+---@description Returns player data by their citizen ID.
+---@param citizenid string
+---@return table | nil
+Framework.GetPlayerByIdentifier = function(citizenid)
+    local player = QBCore.Functions.GetPlayerByCitizenId(citizenid)
+    if not player then return end
+    return player
+end
+
+---@description Returns the server source ID for a given citizen ID.
+---@param citizenid string
+---@return number | nil
+Framework.GetPlayerSource = function(citizenid)
+    local player = Framework.GetPlayerByIdentifier(citizenid)
+    if not player then return end
+    return player.PlayerData.source
 end
 
 ---@description Returns the player data of the specified source in the framework defualt format.

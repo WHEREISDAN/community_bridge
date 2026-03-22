@@ -61,6 +61,24 @@ Framework.GetPlayerIdentifier = function(src)
     return playerData.citizenid
 end
 
+---@description Returns player data by their citizen ID.
+---@param citizenid string
+---@return table | nil
+Framework.GetPlayerByIdentifier = function(citizenid)
+    local player = QBox:GetPlayerByCitizenId(citizenid)
+    if not player then return end
+    return player
+end
+
+---@description Returns the server source ID for a given citizen ID.
+---@param citizenid string
+---@return number | nil
+Framework.GetPlayerSource = function(citizenid)
+    local player = Framework.GetPlayerByIdentifier(citizenid)
+    if not player then return end
+    return player.PlayerData.source
+end
+
 ---@description This will return a table of all logged in players
 ---@return table
 Framework.GetPlayers = function()

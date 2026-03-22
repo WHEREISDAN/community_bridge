@@ -87,6 +87,24 @@ Framework.GetPlayerIdentifier = function(src)
     return xPlayer.getIdentifier()
 end
 
+---@description Returns player data by their identifier.
+---@param citizenid string
+---@return table | nil
+Framework.GetPlayerByIdentifier = function(citizenid)
+    local xPlayer = ESX.GetPlayerFromIdentifier(citizenid)
+    if not xPlayer then return end
+    return xPlayer
+end
+
+---@description Returns the server source ID for a given identifier.
+---@param citizenid string
+---@return number | nil
+Framework.GetPlayerSource = function(citizenid)
+    local xPlayer = Framework.GetPlayerByIdentifier(citizenid)
+    if not xPlayer then return end
+    return xPlayer.source
+end
+
 --- @description This will return the jobs registered in the framework in a table.
 --- @return table in the format "{name = jobName, label = jobLabel, grade = {name = gradeName, level = gradeLevel}}"
 Framework.GetFrameworkJobs = function()
